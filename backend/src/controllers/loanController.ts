@@ -7,6 +7,7 @@ export const applyLoan = async (req: Request, res: Response, next: NextFunction)
     try {
         const { customerId, loanAmount, repaymentPeriod, loanPurpose } = req.body;
 
+
         const newLoan = new Loan({
             customerId,
             loanAmount,
@@ -15,7 +16,7 @@ export const applyLoan = async (req: Request, res: Response, next: NextFunction)
         });
 
         await newLoan.save();
-        res.status(201).json({ loanId: newLoan._id, message: 'Loan application successful' });
+        res.status(201).json({ loanId: newLoan._id, status: newLoan.status, message: 'Loan application successful', });
     } catch (error) {
         next(error);
     }
@@ -24,16 +25,17 @@ export const applyLoan = async (req: Request, res: Response, next: NextFunction)
 // Get loan status by loanId
 export const getLoanStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+
         const { loanId } = req.params;
+        console.log(loanId, "loadId");
         if (!mongoose.Types.ObjectId.isValid(loanId)) {
             res.status(400).json({ message: 'Invalid loan ID' });
             return;
         }
-
-        const loan = await Loan.findById(loanId);
+        const loan = await Loan.findById(loanId).select('_id customerId loanAmount repaymentPeriod loanPurpose status');
         if (!loan) {
             res.status(404).json({ message: 'Loan not found' });
-            return
+            return;
         }
 
         res.json(loan);
@@ -58,8 +60,8 @@ export const updateLoan = async (req: Request, res: Response, next: NextFunction
             res.status(404).json({ message: 'Loan not found' });
             return
         }
+        res.status(201).json({ loanId: updatedLoan._id, status: updatedLoan.status, message: 'Loan updated successfully', });
 
-        res.json(updatedLoan);
         return
     } catch (error) {
         next(error);

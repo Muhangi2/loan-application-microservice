@@ -4,6 +4,7 @@ import loanRoutes from './routes/loanRoutes';
 import errorHandler from './middleware/errorHandler';
 import connectDB from './config/db';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 
 dotenv.config();
 connectDB();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/api/loans', loanRoutes);
 
 // Error Handler
+app.use(morgan('combined'));
 app.use(errorHandler);
 
 export default app;
