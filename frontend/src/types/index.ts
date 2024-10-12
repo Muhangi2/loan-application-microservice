@@ -1,13 +1,14 @@
 
-type LoanStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type LoanStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
-interface LoanApplication {
+export interface LoanApplication {
     customerId: string;
     loanAmount: number;
     repaymentPeriod: number;
     loanPurpose: string;
 }
-interface LoanResponse {
+
+export interface LoanResponse {
     loadId: string;
     status: LoanStatus,
 }
