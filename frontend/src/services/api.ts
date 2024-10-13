@@ -33,5 +33,3 @@ export const fetchAllLoans = async (): Promise<string[]> => {
     const loanIds: string[] = await response.json();
     return loanIds;
 };
-
-// setLoanIds(ids);

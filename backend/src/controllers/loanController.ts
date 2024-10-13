@@ -67,3 +67,19 @@ export const updateLoan = async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 };
+
+//fetching all the loans
+export const getAllLoans = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+
+        const loans = await Loan.find().select('_id');
+        if (loans.length === 0) {
+            res.status(404).json({ message: 'No loans found' });
+            return;
+        }
+        const loanIds = loans.map(loan => loan._id);
+        res.status(200).json(loanIds);
+    } catch (error) {
+        next(error);
+    }
+};

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+// src/components/LoadStatusUpdate.tsx
+
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import {
   Card,
   CardContent,
@@ -17,22 +19,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { checkLoanStatus, fetchAllLoans } from "../services/api";
+import {
+  checkLoanStatus,
+  fetchAllLoans,
+  updateLoanApplication,
+} from "../services/api";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateLoanApplication } from "../services/api";
+import { LoanResponse, LoanUpdate } from "../types";
 
-const LoadStatusUpdate = () => {
-  const [selectedLoanId, setSelectedLoanId] = useState("");
-  const [loanStatus, setLoanStatus] = useState(null);
-  const [updateFormData, setUpdateFormData] = useState({
-    loanAmount: 0,
-    repaymentPeriod: 0,
+const LoadStatusUpdate: React.FC = () => {
+  const [selectedLoanId, setSelectedLoanId] = useState<string>("");
+  const [loanStatus, setLoanStatus] = useState<LoanResponse | null>(null);
+  const [updateFormData, setUpdateFormData] = useState<Partial<LoanUpdate>>({
+    loanAmount: undefined,
+    repaymentPeriod: undefined,
   });
-  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
-  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState<boolean>(false);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState<boolean>(false);
   const [loanIds, setLoanIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchLoans = async () => {
@@ -41,6 +47,7 @@ const LoadStatusUpdate = () => {
         setLoanIds(ids);
       } catch (error) {
         console.error("Error fetching loan IDs:", error);
+        toast.error("Error fetching loan IDs.");
       }
     };
 
@@ -57,11 +64,12 @@ const LoadStatusUpdate = () => {
       setLoanStatus(response);
       setIsStatusDialogOpen(true);
     } catch (error) {
+      console.error("Error fetching loan status:", error);
       toast.error("Failed to fetch loan status.");
     }
   };
 
-  const handleUpdateLoan = async () => {
+  const handleUpdateLoan = () => {
     if (!selectedLoanId) {
       toast.warn("Please select a loan ID to update");
       return;
@@ -69,23 +77,45 @@ const LoadStatusUpdate = () => {
     setIsUpdateDialogOpen(true);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUpdateFormData({ ...updateFormData, [name]: value });
+    setUpdateFormData((prevData) => ({
+      ...prevData,
+      [name]: value === "" ? undefined : Number(value),
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
 
-    const Response = await updateLoanApplication(
-      selectedLoanId,
-      updateFormData
-    );
-    console.log(Response, "Response");
-    toast.success("Loan updated successfully!");
-    setLoading(false);
-    setIsUpdateDialogOpen(false);
+    if (!selectedLoanId) {
+      toast.warn("Please select a loan ID to update");
+      return;
+    }
+
+    const dataToUpdate: Partial<LoanUpdate> = {};
+    if (updateFormData.loanAmount !== undefined)
+      dataToUpdate.loanAmount = updateFormData.loanAmount;
+    if (updateFormData.repaymentPeriod !== undefined)
+      dataToUpdate.repaymentPeriod = updateFormData.repaymentPeriod;
+
+    if (Object.keys(dataToUpdate).length === 0) {
+      toast.warn("Please provide at least one field to update.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await updateLoanApplication(selectedLoanId, dataToUpdate);
+      toast.success("Loan updated successfully!");
+      setIsUpdateDialogOpen(false);
+      // Optionally, refresh loan status or data here
+    } catch (error) {
+      console.error("Error updating loan:", error);
+      toast.error("Failed to update loan.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -146,7 +176,6 @@ const LoadStatusUpdate = () => {
           <DialogHeader>
             <DialogTitle>Update Loan</DialogTitle>
             <DialogDescription>
-              {/* Include your update form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <ToastContainer />
 
@@ -157,7 +186,11 @@ const LoadStatusUpdate = () => {
                     type="number"
                     id="loanAmount"
                     name="loanAmount"
-                    value={updateFormData.loanAmount}
+                    value={
+                      updateFormData.loanAmount !== undefined
+                        ? updateFormData.loanAmount
+                        : ""
+                    }
                     onChange={handleChange}
                     required
                   />
@@ -171,12 +204,15 @@ const LoadStatusUpdate = () => {
                     type="number"
                     id="repaymentPeriod"
                     name="repaymentPeriod"
-                    value={updateFormData.repaymentPeriod}
+                    value={
+                      updateFormData.repaymentPeriod !== undefined
+                        ? updateFormData.repaymentPeriod
+                        : ""
+                    }
                     onChange={handleChange}
                     required
                   />
                 </div>
-                {/* Loan Purpose */}
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Submitting..." : "Submit"}
                 </Button>

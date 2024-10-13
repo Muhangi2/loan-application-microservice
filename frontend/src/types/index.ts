@@ -8,11 +8,18 @@ export interface LoanApplication {
     loanPurpose: string;
 }
 
-export interface LoanResponse {
-    loadId: string;
-    status: LoanStatus,
+
+export interface LoanUpdate {
+    loanAmount?: number;
+    repaymentPeriod?: number;
 }
-export interface LoanUpdate{
+export interface LoanResponse {
+    loanId: string;
+    customerId: string;
     loanAmount: number;
     repaymentPeriod: number;
-}
+    loanPurpose: string;
+    status: LoanStatus;
+  }
+  
+

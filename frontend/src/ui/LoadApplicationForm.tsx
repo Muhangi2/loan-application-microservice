@@ -56,7 +56,7 @@ const LoanApplicationForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
-      toast.error("Please fill in all fields."); // Show error toast
+      toast.error("Please fill in all fields."); 
       return;
     }
 
@@ -75,9 +75,9 @@ const LoanApplicationForm = () => {
       const response = await applyForLoan(application);
       console.log(response, "response");
 
-      toast.success("Loan application submitted successfully!"); // Show success toast
+      toast.success("Loan application submitted successfully!"); 
     } catch (err) {
-      toast.error("Failed to submit loan application."); // Show error toast
+      toast.error("Failed to submit loan application."); 
     } finally {
       setLoading(false);
     }
@@ -85,8 +85,8 @@ const LoanApplicationForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <ToastContainer /> {/* Add ToastContainer */}
-      {/* Customer Selection */}
+      <ToastContainer /> 
+    
       <div className="space-y-2">
         <Label htmlFor="customerName">Customer Name</Label>
         <Select onValueChange={handleCustomerSelect}>
@@ -105,7 +105,7 @@ const LoanApplicationForm = () => {
           </SelectContent>
         </Select>
       </div>
-      {/* Loan Amount */}
+  
       <div className="space-y-2">
         <Label htmlFor="loanAmount">Loan Amount</Label>
         <Input
@@ -116,7 +116,7 @@ const LoanApplicationForm = () => {
           required
         />
       </div>
-      {/* Repayment Period */}
+   
       <div className="space-y-2">
         <Label htmlFor="repaymentPeriod">Repayment Period (months)</Label>
         <Input
@@ -127,7 +127,7 @@ const LoanApplicationForm = () => {
           required
         />
       </div>
-      {/* Loan Purpose */}
+
       <div className="space-y-2">
         <Label htmlFor="loanPurpose">Loan Purpose</Label>
         <Textarea
