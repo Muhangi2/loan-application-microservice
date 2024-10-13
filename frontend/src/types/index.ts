@@ -12,3 +12,7 @@ export interface LoanResponse {
     loadId: string;
     status: LoanStatus,
 }
+export interface LoanUpdate{
+    loanAmount: number;
+    repaymentPeriod: number;
+}

@@ -12,38 +12,16 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import LoanApplicationForm from "../ui/LoadApplicationForm";
+
 import { checkLoanStatus } from "../services/api";
+import LoadStatusUpdate from "@/ui/LoadStatusUpdate";
 
 const LoanApplication = () => {
   const [loanId, setLoanId] = useState("");
-  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [loanStatus, setLoanStatus] = useState(null);
   const [updateFormData, setUpdateFormData] = useState({});
-
-  const handleStatusCheck = async () => {
-    if (!loanId) {
-      toast.warn("Please enter a loan ID");
-      return;
-    }
-    try {
-      const response = await checkLoanStatus(loanId);
-      setLoanStatus(response);
-      setIsStatusDialogOpen(true);
-    } catch (error) {
-      toast.error("Failed to fetch loan status.");
-    }
-  };
 
   //   const handleUpdateSubmit = async (formData) => {
   //     if (!loanId) {
@@ -84,24 +62,7 @@ const LoanApplication = () => {
           </Card>
         </TabsContent>
         <TabsContent value="status">
-          <Card>
-            <CardHeader>
-              <CardTitle>View Loan Status</CardTitle>
-              <CardDescription>
-                Enter your loan ID to check the status.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex space-x-2">
-                <Input
-                  value={loanId}
-                  onChange={(e) => setLoanId(e.target.value)}
-                  placeholder="Enter Loan ID"
-                />
-                <Button onClick={handleStatusCheck}>Check Status</Button>
-              </div>
-            </CardContent>
-          </Card>
+          <LoadStatusUpdate />
         </TabsContent>
         <TabsContent value="update">
           <Card>
@@ -125,27 +86,6 @@ const LoanApplication = () => {
           </Card>
         </TabsContent>
       </Tabs>
-
-      <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Loan Status</DialogTitle>
-            <DialogDescription>
-              {loanStatus && (
-                <>
-                  <p>Status: {loanStatus.status}</p>
-                  <p>{loanStatus.details}</p>
-                </>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button onClick={() => setIsStatusDialogOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <ToastContainer />
     </div>
   );
 };
