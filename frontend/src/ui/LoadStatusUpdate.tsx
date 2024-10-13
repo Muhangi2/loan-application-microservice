@@ -157,7 +157,7 @@ const LoadStatusUpdate: React.FC = () => {
                 <>
                   <p>Status: {loanStatus.status}</p>
                   <p>Customer ID: {loanStatus.customerId}</p>
-                  <p>Loan Amount: ${loanStatus.loanAmount}</p>
+                  <p>Loan Amount: {loanStatus.loanAmount}</p>
                   <p>Repayment Period: {loanStatus.repaymentPeriod} months</p>
                   <p>Loan Purpose: {loanStatus.loanPurpose}</p>
                 </>

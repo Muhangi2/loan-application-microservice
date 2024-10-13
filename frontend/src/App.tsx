@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <>
-      <div className="text-xl font-bold mb-2">
+      <div>
         <LoanApplicationPage />
         <ToastContainer />
       </div>
