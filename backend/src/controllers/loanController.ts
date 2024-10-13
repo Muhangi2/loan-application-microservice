@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import Loan from '../models/Loan';
 import mongoose from 'mongoose';
 
-// Create a loan application
+
 export const applyLoan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { customerId, loanAmount, repaymentPeriod, loanPurpose } = req.body;
@@ -22,7 +22,7 @@ export const applyLoan = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-// Get loan status by loanId
+
 export const getLoanStatus = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
 
@@ -45,7 +45,7 @@ export const getLoanStatus = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-// Update loan details by loanId
+
 export const updateLoan = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { loanId } = req.params;
@@ -68,7 +68,7 @@ export const updateLoan = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-//fetching all the loans
+
 export const getAllLoans = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
 
