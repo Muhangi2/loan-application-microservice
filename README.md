@@ -29,7 +29,7 @@ Running the Application
 Using Docker
 
 Build and run the containers:
-Copydocker-compose up --build
+Copy  docker-compose up --build
 
 Access the application:
 
@@ -42,11 +42,11 @@ Running Locally
 
 Start the backend:
 Copycd backend
-npm start
+npm  run dev
 
 Start the frontend:
 Copycd frontend
-npm start
+npm run dev
 
 Access the application:
 
