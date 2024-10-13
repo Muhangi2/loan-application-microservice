@@ -8,7 +8,7 @@ Docker and Docker Compose
 Setup
 
 Clone the repository:
-Copygit clone https://github.com/your-username/loan-application-microservice.git
+Copygit clone  https://github.com/Muhangi2/loan-application-microservice.git
 cd loan-application-microservice
 
 Set up environment variables:
@@ -33,7 +33,7 @@ Copydocker-compose up --build
 
 Access the application:
 
-Frontend: http://localhost:3000
+Frontend: http://localhost:5317
 Backend API: http://localhost:5000
 
 
